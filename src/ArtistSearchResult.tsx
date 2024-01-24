@@ -8,7 +8,7 @@ export default function ArtistSearchResult({artist}: {
         <div
             style={{cursor: "pointer"}}
         >
-            <img src={artist.images.length > 0 ? artist.images[0].url : ''} style={{height: "64px", width: "64px"}}/>
+            <img src={artist.images.length > 0 ? artist.images[0].url : ''} style={{height: "64px", width: "64px"}} alt={artist.name}/>
             <div>
                 <div>{artist.name}</div>
             </div>

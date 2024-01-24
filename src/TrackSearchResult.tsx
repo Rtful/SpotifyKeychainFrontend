@@ -13,7 +13,7 @@ export default function TrackSearchResult({track, chooseTrack}: {
             style={{cursor: "pointer"}}
             onClick={handlePlay}
         >
-            <img src={track.album.images[0].url} style={{height: "64px", width: "64px"}}/>
+            <img src={track.album.images[0].url} style={{height: "64px", width: "64px"}} alt={track.name}/>
             <div>
                 <div>{track.name}</div>
                 <div>{track.artists[0].name}</div>
