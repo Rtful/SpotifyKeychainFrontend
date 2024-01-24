@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import './App.css'
-import Player from "./Player.tsx";
+// import Player from "./Player.tsx";
 import Track from "./components/Track.ts";
 import Artist from "./components/Artist.ts";
 import Album from "./components/Album.ts";
@@ -27,7 +27,7 @@ function App() {
         tracks: [],
         playlists: []
     });
-    const [playingTrack, setPlayingTrack] = useState<Track>();
+    // const [playingTrack, setPlayingTrack] = useState<Track>();
 
     // API access token
     useEffect(() => {
@@ -171,12 +171,9 @@ function App() {
                     </div>
                 </div>
             </div>
-            <div>
-                <Player accessToken={accessToken} trackUri={playingTrack?.href}/>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
+            {/*<div>*/}
+            {/*    <Player accessToken={accessToken} trackUri={playingTrack?.href}/>*/}
+            {/*</div>*/}
         </>
     )
 }

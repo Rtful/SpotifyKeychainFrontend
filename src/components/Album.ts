@@ -1,9 +1,8 @@
-interface Album {
+import Result from "./Result.ts";
+
+interface Album extends Result{
     images: { url: string }[];
-    name: string;
     artists: { name: string }[];
-    href: string;
-    uri: string;
 }
 
 export default Album;
