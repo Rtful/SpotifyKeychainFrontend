@@ -14,7 +14,6 @@ const CLIENT_SECRET = "e80fddb0c3f247e28d1b1afe887049a3"
 function App() {
     const [searchString, setSearchString] = useState<string>('');
     const [url, setUrl] = useState<string>('');
-    const [filename, setFilename] = useState<string>('spotifyCode');
     const [accessToken, setAccessToken] = useState<string>('');
     const [searchResults, setSearchResults] = useState<{
         artists: Artist[],
@@ -44,8 +43,7 @@ function App() {
     }, [])
 
     // Search
-    async function search() {
-        setFilename(searchString)
+    function search() {
         const artistParameters = {
             method: 'GET',
             headers: {
@@ -68,16 +66,16 @@ function App() {
             });
     }
 
-    const enterDetector = (e:React.KeyboardEvent) => {
+    const enterDetector = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
-            download3dModel();
+            search();
         }
     };
 
     // download
-    function download3dModel() {
+    function download3dModel(urlToBeDownloaded: string, fileName: string) {
         const data = new URLSearchParams();
-        data.append('url', url);
+        data.append('url', urlToBeDownloaded);
         fetch('http://spotifycode.dodger.ch:5000/getCode', {
             method: 'POST',
             mode: 'cors',
@@ -87,7 +85,7 @@ function App() {
                 const fileUrl = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = fileUrl;
-                link.setAttribute('download', filename + ".stl"); // Set the desired file name and extension
+                link.setAttribute('download', fileName + ".stl"); // Set the desired file name and extension
                 document.body.appendChild(link);
                 link.click();
                 link.remove();
@@ -122,7 +120,10 @@ function App() {
                     />
                 </label>
                 <button onClick={() => {
-                    download3dModel();
+                    download3dModel(url, 'spotifyCode');
+                    // TODO: make request for appropriate type and get the name of the track, playlist, artist or album
+                    // example: 65mUrGkPCn1cZIucA5FXmZ from https://open.spotify.com/playlist/65mUrGkPCn1cZIucA5FXmZ?si=7015af7042a64a44
+                    // https://api.spotify.com/v1/playlists/65mUrGkPCn1cZIucA5FXmZ
                 }}></button>
             </div>
             <div id={"results"}>
@@ -132,6 +133,9 @@ function App() {
                         {searchResults.tracks.map((track: Track) => (
                             <SearchResult
                                 result={track}
+                                onClickFunction={() => {
+                                    download3dModel(track.external_urls.spotify, track.name)
+                                }}
                                 key={track.uri}
                             />
                         ))}
@@ -143,6 +147,9 @@ function App() {
                         {searchResults.artists.map((artist: Artist) => (
                             <SearchResult
                                 result={artist}
+                                onClickFunction={() => {
+                                    download3dModel(artist.external_urls.spotify, artist.name)
+                                }}
                                 key={artist.uri}
                             />
                         ))}
@@ -154,6 +161,9 @@ function App() {
                         {searchResults.albums.map((album: Album) => (
                             <SearchResult
                                 result={album}
+                                onClickFunction={() => {
+                                    download3dModel(album.external_urls.spotify, album.name)
+                                }}
                                 key={album.uri}
                             />
                         ))}
@@ -165,6 +175,9 @@ function App() {
                         {searchResults.playlists.map((playlist: Playlist) => (
                             <SearchResult
                                 result={playlist}
+                                onClickFunction={() => {
+                                    download3dModel(playlist.external_urls.spotify, playlist.name)
+                                }}
                                 key={playlist.uri}
                             />
                         ))}
