@@ -1,4 +1,6 @@
-interface Playlist {
+import Result from "./Result.ts";
+
+interface Playlist extends Result{
     name: string;
     owner: { display_name: string };
     images: { url: string }[];

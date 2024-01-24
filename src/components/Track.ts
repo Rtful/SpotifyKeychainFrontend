@@ -1,4 +1,6 @@
-interface Track {
+import Result from "./Result.ts";
+
+interface Track extends Result{
     album: { images: { url: string }[] };
     name: string;
     artists: { name: string }[];

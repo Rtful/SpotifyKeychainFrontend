@@ -1,4 +1,6 @@
-interface Artist {
+import Result from "./Result.ts";
+
+interface Artist extends Result {
     images: { url: string }[];
     name: string;
     uri: string;

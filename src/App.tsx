@@ -1,12 +1,11 @@
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import './App.css'
-import TrackSearchResult from "./TrackSearchResult.tsx"
-import ArtistSearchResult from "./ArtistSearchResult.tsx";
 import Player from "./Player.tsx";
-import Track from "./Track.ts";
-import Artist from "./Artist.ts";
-import Album from "./Album.ts";
-import Playlist from "./Playlist.ts";
+import Track from "./components/Track.ts";
+import Artist from "./components/Artist.ts";
+import Album from "./components/Album.ts";
+import Playlist from "./components/Playlist.ts";
+import SearchResult from "./components/SearchResult.tsx";
 
 const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9"
 const CLIENT_SECRET = "e80fddb0c3f247e28d1b1afe887049a3"
@@ -17,7 +16,12 @@ function App() {
     const [url, setUrl] = useState<string>('');
     const [filename, setFilename] = useState<string>('spotifyCode');
     const [accessToken, setAccessToken] = useState<string>('');
-    const [searchResults, setSearchResults] = useState<{ artists: Artist[], albums:Album[], tracks:Track[], playlists:Playlist[] }>({
+    const [searchResults, setSearchResults] = useState<{
+        artists: Artist[],
+        albums: Album[],
+        tracks: Track[],
+        playlists: Playlist[]
+    }>({
         artists: [],
         albums: [],
         tracks: [],
@@ -42,7 +46,7 @@ function App() {
     // Search
     async function search() {
         setFilename(searchString)
-        let artistParameters = {
+        const artistParameters = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -61,10 +65,14 @@ function App() {
                     playlists: data.playlists.items
                 });
                 console.log(data);
-                // setSearchResults(data)
-                // setFoundTracks(data.tracks.items);
             });
     }
+
+    const enterDetector = (e:React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            download3dModel();
+        }
+    };
 
     // download
     function download3dModel() {
@@ -86,11 +94,6 @@ function App() {
             });
     }
 
-    function chooseTrack(track: Track) {
-        setPlayingTrack(track)
-        setSearchString("")
-    }
-
     return (
         <>
             <div>
@@ -101,6 +104,7 @@ function App() {
                         onChange={e => {
                             setSearchString(e.target.value);
                         }}
+                        onKeyDown={enterDetector}
                     />
                 </label>
                 <button onClick={() => {
@@ -121,32 +125,52 @@ function App() {
                     download3dModel();
                 }}></button>
             </div>
-            <div id={"tracks"}>
-                {searchResults.tracks.map((track: Track) => (
-                    <TrackSearchResult
-                        track={track}
-                        key={track.uri}
-                        chooseTrack={chooseTrack}
-                    />
-                ))}
+            <div id={"results"}>
+                <div className={"result-group column"}>
+                    <p>Songs</p>
+                    <div id={"tracks"} className={"result-container"}>
+                        {searchResults.tracks.map((track: Track) => (
+                            <SearchResult
+                                result={track}
+                                key={track.uri}
+                            />
+                        ))}
+                    </div>
+                </div>
+                <div className={"result-group column"}>
+                    <p>Artists</p>
+                    <div className={"result-container artists"}>
+                        {searchResults.artists.map((artist: Artist) => (
+                            <SearchResult
+                                result={artist}
+                                key={artist.uri}
+                            />
+                        ))}
+                    </div>
+                </div>
+                <div className={"result-group row"}>
+                    <p>Albums</p>
+                    <div className={"result-container"}>
+                        {searchResults.albums.map((album: Album) => (
+                            <SearchResult
+                                result={album}
+                                key={album.uri}
+                            />
+                        ))}
+                    </div>
+                </div>
+                <div className={"result-group row"}>
+                    <p>Playlists</p>
+                    <div id={"playlists"} className={"result-container"}>
+                        {searchResults.playlists.map((playlist: Playlist) => (
+                            <SearchResult
+                                result={playlist}
+                                key={playlist.uri}
+                            />
+                        ))}
+                    </div>
+                </div>
             </div>
-            <div id={"artists"}>
-                {searchResults.artists.map((artist: Artist) => (
-                    <ArtistSearchResult
-                        key={artist.uri}
-                        artist={artist}
-                    />
-                ))}
-            </div>
-            {/*<div id={"albums"}>*/}
-            {/*    {searchResults.albums.map((track: Track) => (*/}
-            {/*        <TrackSearchResult*/}
-            {/*            track={track}*/}
-            {/*            key={track.uri}*/}
-            {/*            chooseTrack={chooseTrack}*/}
-            {/*        />*/}
-            {/*    ))}*/}
-            {/*</div>*/}
             <div>
                 <Player accessToken={accessToken} trackUri={playingTrack?.href}/>
             </div>
