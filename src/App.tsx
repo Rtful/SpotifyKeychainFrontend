@@ -1,17 +1,29 @@
 import {useEffect, useState} from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import TrackSearchResult from "./TrackSearchResult.tsx"
+import ArtistSearchResult from "./ArtistSearchResult.tsx";
+import Player from "./Player.tsx";
+import Track from "./Track.ts";
+import Artist from "./Artist.ts";
+import Album from "./Album.ts";
+import Playlist from "./Playlist.ts";
 
 const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9"
 const CLIENT_SECRET = "e80fddb0c3f247e28d1b1afe887049a3"
 
 
 function App() {
-    const [searchString, setSearchString] = useState<string>('')
-    const [url, setUrl] = useState<string>('')
-    const [filename, setFilename] = useState<string>('spotifyCode')
-    const [accessToken, setAccessToken] = useState<string>('')
+    const [searchString, setSearchString] = useState<string>('');
+    const [url, setUrl] = useState<string>('');
+    const [filename, setFilename] = useState<string>('spotifyCode');
+    const [accessToken, setAccessToken] = useState<string>('');
+    const [searchResults, setSearchResults] = useState<{ artists: Artist[], albums:Album[], tracks:Track[], playlists:Playlist[] }>({
+        artists: [],
+        albums: [],
+        tracks: [],
+        playlists: []
+    });
+    const [playingTrack, setPlayingTrack] = useState<Track>();
 
     // API access token
     useEffect(() => {
@@ -24,23 +36,34 @@ function App() {
         }
         fetch('https://accounts.spotify.com/api/token', authParameters)
             .then(result => result.json())
-            .then(data => setAccessToken(data))
+            .then(data => setAccessToken(data.access_token));
     }, [])
 
     // Search
     async function search() {
+        setFilename(searchString)
         let artistParameters = {
-            method:'GET',
-            headers:{
-                'Content-Type':'application/json',
-                'Authorization':accessToken
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken
             }
-        }
-        const artistID = await fetch('https://api.spotify.com/v1/search?q=' + searchString + '&type=artist', artistParameters)
+        };
+        console.log(accessToken);
+        // const artistID = await fetch('https://api.spotify.com/v1/search?q=' + searchString + '&type=artist', artistParameters)
+        fetch('https://api.spotify.com/v1/search?q=' + searchString + '&type=album%2Ctrack%2Cartist%2Cplaylist&limit=5', artistParameters)
             .then(response => response.json())
-            .then(data => {return data.artists.items[0].id})
-        console.log('searching for "' + searchString + '"')
-        console.log('Artist ID "' + artistID + '"')
+            .then(data => {
+                setSearchResults({
+                    tracks: data.tracks.items,
+                    albums: data.albums.items,
+                    artists: data.artists.items,
+                    playlists: data.playlists.items
+                });
+                console.log(data);
+                // setSearchResults(data)
+                // setFoundTracks(data.tracks.items);
+            });
     }
 
     // download
@@ -53,47 +76,79 @@ function App() {
             body: data
         }).then(response => response.blob())
             .then(blob => {
-                const fileUrl = window.URL.createObjectURL(blob)
-                const link = document.createElement('a')
-                link.href = fileUrl
-                link.setAttribute('download', filename + ".stl") // Set the desired file name and extension
-                document.body.appendChild(link)
-                link.click()
-                link.remove()
-            })
+                const fileUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = fileUrl;
+                link.setAttribute('download', filename + ".stl"); // Set the desired file name and extension
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            });
+    }
+
+    function chooseTrack(track: Track) {
+        setPlayingTrack(track)
+        setSearchString("")
     }
 
     return (
         <>
             <div>
-                <a href="https://vitejs.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo"/>
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img src={reactLogo} className="logo react" alt="React logo"/>
-                </a>
-            </div>
-            <div>
-                <input
-                    value={searchString}
-                    onChange={e => {
-                        setSearchString(e.target.value);
-                    }}
-                />
+                <label>
+                    Search bar
+                    <input
+                        value={searchString}
+                        onChange={e => {
+                            setSearchString(e.target.value);
+                        }}
+                    />
+                </label>
                 <button onClick={() => {
                     search();
                 }}></button>
             </div>
             <div>
-                <input
-                    value={url}
-                    onChange={e => {
-                        setUrl(e.target.value);
-                    }}
-                />
+                <label>
+                    Spotify URL
+                    <input
+                        value={url}
+                        onChange={e => {
+                            setUrl(e.target.value);
+                        }}
+                    />
+                </label>
                 <button onClick={() => {
                     download3dModel();
                 }}></button>
+            </div>
+            <div id={"tracks"}>
+                {searchResults.tracks.map((track: Track) => (
+                    <TrackSearchResult
+                        track={track}
+                        key={track.uri}
+                        chooseTrack={chooseTrack}
+                    />
+                ))}
+            </div>
+            <div id={"artists"}>
+                {searchResults.artists.map((artist: Artist) => (
+                    <ArtistSearchResult
+                        key={artist.uri}
+                        artist={artist}
+                    />
+                ))}
+            </div>
+            {/*<div id={"albums"}>*/}
+            {/*    {searchResults.albums.map((track: Track) => (*/}
+            {/*        <TrackSearchResult*/}
+            {/*            track={track}*/}
+            {/*            key={track.uri}*/}
+            {/*            chooseTrack={chooseTrack}*/}
+            {/*        />*/}
+            {/*    ))}*/}
+            {/*</div>*/}
+            <div>
+                <Player accessToken={accessToken} trackUri={playingTrack?.href}/>
             </div>
             <p className="read-the-docs">
                 Click on the Vite and React logos to learn more
