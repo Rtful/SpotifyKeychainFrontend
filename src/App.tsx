@@ -8,13 +8,13 @@ import Playlist from "./components/Playlist.ts";
 import SearchResult from "./components/SearchResult.tsx";
 
 const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9"
-const CLIENT_SECRET = "e80fddb0c3f247e28d1b1afe887049a3"
-
+const REDIRECT_URI = "http://localhost:5173"
+const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
 
 function App() {
     const [searchString, setSearchString] = useState<string>('');
     const [url, setUrl] = useState<string>('');
-    const [accessToken, setAccessToken] = useState<string>('');
+    const [token, setToken] = useState<string | null>();
     const [searchResults, setSearchResults] = useState<{
         artists: Artist[],
         albums: Album[],
@@ -26,33 +26,34 @@ function App() {
         tracks: [],
         playlists: []
     });
-    // const [playingTrack, setPlayingTrack] = useState<Track>();
 
-    // API access token
     useEffect(() => {
-        const authParameters = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'grant_type=client_credentials&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
+        // The hash is supplied by the spotify login api as a GET parameter
+        const hash: string = window.location.hash;
+        let token: string | null = window.localStorage.getItem("token");
+
+        if (!token && hash) {
+            const hashParams: string[] = hash.substring(1).split("&");
+            const accessTokenParam: string | undefined = hashParams.find(elem => elem.startsWith("access_token"));
+
+            if (accessTokenParam) {
+                token = accessTokenParam.split("=")[1];
+                window.location.hash = "";
+                // Saving the token as localstorage
+                window.localStorage.setItem("token", token);
+            }
         }
-        fetch('https://accounts.spotify.com/api/token', authParameters)
-            .then(result => result.json())
-            .then(data => setAccessToken(data.access_token));
+        setToken(token);
     }, [])
 
-    // Search
     function search() {
         const artistParameters = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken
+                'Authorization': 'Bearer ' + token
             }
         };
-        console.log(accessToken);
-        // const artistID = await fetch('https://api.spotify.com/v1/search?q=' + searchString + '&type=artist', artistParameters)
         fetch('https://api.spotify.com/v1/search?q=' + searchString + '&type=album%2Ctrack%2Cartist%2Cplaylist&limit=5', artistParameters)
             .then(response => response.json())
             .then(data => {
@@ -96,22 +97,7 @@ function App() {
         <>
             <div>
                 <label>
-                    Search bar
-                    <input
-                        value={searchString}
-                        onChange={e => {
-                            setSearchString(e.target.value);
-                        }}
-                        onKeyDown={enterDetector}
-                    />
-                </label>
-                <button onClick={() => {
-                    search();
-                }}></button>
-            </div>
-            <div>
-                <label>
-                    Spotify URL
+                    Already have a Spotify URL?
                     <input
                         value={url}
                         onChange={e => {
@@ -124,7 +110,32 @@ function App() {
                     // TODO: make request for appropriate type and get the name of the track, playlist, artist or album
                     // example: 65mUrGkPCn1cZIucA5FXmZ from https://open.spotify.com/playlist/65mUrGkPCn1cZIucA5FXmZ?si=7015af7042a64a44
                     // https://api.spotify.com/v1/playlists/65mUrGkPCn1cZIucA5FXmZ
-                }}></button>
+                }}>Download Spotify Keychain STL</button>
+            </div>
+            <div>
+                {
+                    // If no token is set, display the login link, otherwise the search box
+                    token === null ?
+                        <div>
+                            Want to search for Songs, Playlists and more?
+                        <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token`}>Login
+                            to Spotify</a>
+                        </div>
+                        :
+                        <><label>
+                            Search for Songs, Albums, Playlists and Artists
+                            <input
+                                value={searchString}
+                                onChange={e => {
+                                    setSearchString(e.target.value);
+                                }}
+                                onKeyDown={enterDetector}/>
+                        </label>
+                            <button onClick={() => {
+                                search();
+                            }}>Search</button>
+                        </>
+                }
             </div>
             <div id={"results"}>
                 <div className={"result-group column"}>
