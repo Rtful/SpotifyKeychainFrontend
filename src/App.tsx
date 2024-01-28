@@ -8,7 +8,7 @@ import Playlist from "./components/Playlist.ts";
 import SearchResult from "./components/SearchResult.tsx";
 
 const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9"
-const REDIRECT_URI = "http://localhost:5173"
+const REDIRECT_URI = `http://${window.location.hostname}:${window.location.port}`;
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
 
 function App() {
