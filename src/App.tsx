@@ -6,6 +6,7 @@ import Artist from "./components/Artist.ts";
 import Album from "./components/Album.ts";
 import Playlist from "./components/Playlist.ts";
 import SearchResult from "./components/SearchResult.tsx";
+import {StlViewer} from "react-stl-viewer";
 
 const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9"
 const REDIRECT_URI = `http://${window.location.hostname}:${window.location.port}`;
@@ -14,6 +15,7 @@ const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
 function App() {
     const [searchString, setSearchString] = useState<string>('');
     const [url, setUrl] = useState<string>('');
+    const [stlUrl, setStlUrl] = useState<string>('');
     const [token, setToken] = useState<string | null>();
     const [searchResults, setSearchResults] = useState<{
         artists: Artist[],
@@ -63,7 +65,6 @@ function App() {
                     artists: data.artists.items,
                     playlists: data.playlists.items
                 });
-                console.log(data);
             });
     }
 
@@ -81,11 +82,12 @@ function App() {
             method: 'POST',
             mode: 'cors',
             body: data
-        }).then(response => response.blob())
+        })
+            .then(response => response.blob())
             .then(blob => {
-                const fileUrl = window.URL.createObjectURL(blob);
+                setStlUrl(window.URL.createObjectURL(blob));
                 const link = document.createElement('a');
-                link.href = fileUrl;
+                link.href = stlUrl;
                 link.setAttribute('download', fileName + ".stl"); // Set the desired file name and extension
                 document.body.appendChild(link);
                 link.click();
@@ -95,6 +97,13 @@ function App() {
 
     return (
         <>
+            {stlUrl && (
+                <StlViewer
+                    orbitControls
+                    shadows
+                    url={stlUrl}
+                />
+            )}
             <div>
                 <label>
                     Already have a Spotify URL?
@@ -118,8 +127,7 @@ function App() {
                     token === null ?
                         <div>
                             Want to search for Songs, Playlists and more?
-                        <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token`}>Login
-                            to Spotify</a>
+                            <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token`}>Login to Spotify</a>
                         </div>
                         :
                         <><label>
