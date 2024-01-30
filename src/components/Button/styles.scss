@@ -1,10 +1,11 @@
 @import "../../styles/variables.scss";
 
 button {
-    height: 50px;
-    width: 50px;
+    height: 52px;
+    width: 52px;
     background-color: $searchbar-color;
     border-radius: 999999px;
+    display: flex;
     align-items: center;
     text-align: center;
     justify-content: center;
@@ -12,6 +13,11 @@ button {
     border: none;
     cursor: pointer;
     font-size: medium;
-    text-align: center;
 }
+
+button:hover {
+    scale: 108%;
+}
+
+
 
