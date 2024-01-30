@@ -1,0 +1,96 @@
+@import "../../styles/variables.scss";
+
+.link-section {
+	flex-direction: row;
+	border-radius: 9999999px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 52px;
+}
+
+.link-section {
+	input {
+		background-color: transparent;
+		border: none;
+		height: 100%;
+		padding: 0;
+		padding-left: 1rem;
+		font-size: medium;
+		transition: 0.3s ease-in;
+	}
+
+	input:focus-visible {
+		outline: none;
+	}
+}
+
+.link-section[data-active="true"] {
+	display: flex;
+	padding: 6px 16px 6px 16px;
+	display: flex;
+	align-items: center;
+	border: 2px solid $searchbar-color;
+	background-color: $searchbar-color;
+	height: 36px;
+	max-width: 400px;
+
+	button:hover {
+		scale: 100%;
+	}
+
+	button {
+		background-color: transparent;
+		width: 25px;
+		height: 25px;
+	}
+
+	input {
+		width: 300px;
+	}
+
+    .close-icon {
+		width: 25px;
+        height: 25px;
+	}
+}
+
+.link-section[data-active="true"]:focus-within {
+	border: 2px solid $text-color !important;
+
+	svg {
+		color: $text-color;
+	}
+}
+
+.link-section[data-active="false"] {
+	background-color: transparent;
+	border: none !important;
+	text-align: left;
+
+	input {
+		width: 0;
+		padding: 0;
+	}
+}
+
+.link-section {
+	svg {
+		width: 25px;
+		height: 25px;
+		color: $passive-text-color;
+	}
+}
+
+.link-section:hover {
+	svg {
+		color: $text-color;
+	}
+
+	background-color: $searchbar-color-hover !important;
+}
+
+.link-section svg.link-icon {
+	width: 20px;
+	height: 20px;
+}
