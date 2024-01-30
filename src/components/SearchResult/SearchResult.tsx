@@ -1,29 +1,26 @@
+import { FC } from "react";
 import Result from "./Result.ts";
 import "./styles.scss";
 
-export default function SearchResult({
-	result,
-	onClickFunction,
-}: {
+interface SearchResultProps {
 	result: Result;
 	onClickFunction: () => void;
-}) {
-	let imageUrl = "/src/img/user_default.png";
-	if (typeof result.album !== "undefined") {
-		imageUrl = result.album.images[0].url;
-	} else if (
-		typeof result.images !== "undefined" &&
-		result.images.length > 0
-	) {
-		imageUrl = result.images[0].url;
-	}
+}
+
+export const SearchResult: FC<SearchResultProps> = ({
+	result,
+	onClickFunction,
+}) => {
+
+    const imageUrl = result.album ? result.album.images[0].url : result.images ? result.images[0].url : "/src/img/user_default.png";
+
 	return (
 		<div className={"result"} onClick={onClickFunction}>
 			<img src={imageUrl} alt={result.name} />
 			<div>
 				<div className="result-title">{result.name}</div>
-				{result.artists != null ? result.artists[0].name : "Artist"}
+				{result.artists ? result.artists[0].name : "Artist"}
 			</div>
 		</div>
 	);
-}
+};

@@ -5,12 +5,12 @@ import Track from "./components/SearchResult/Track.ts";
 import Artist from "./components/SearchResult/Artist.ts";
 import Album from "./components/SearchResult/Album.ts";
 import Playlist from "./components/SearchResult/Playlist.ts";
-import SearchResult from "./components/SearchResult/SearchResult.tsx";
 import { StlViewer } from "react-stl-viewer";
 import { Searchbar } from "./components/Searchbar/Searchbar.tsx";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { LinkSection } from "./components/LinkSection/LinkSection.tsx";
 import { IoSearchOutline } from "react-icons/io5";
+import { SearchResult } from "./components/SearchResult/SearchResult.tsx";
 
 const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9";
 const REDIRECT_URI = `http://${window.location.hostname}:${window.location.port}`;
