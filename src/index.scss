@@ -48,3 +48,24 @@ h1 {
     background-color: #f9f9f9;
   }
 }
+
+@media only screen and (max-width: 867px) {
+  .result-group {
+    &.column {
+      width: 100%;
+    }
+    .result {
+      width: 25%;
+    }
+    &.row .result:nth-child(5) {
+      display: none;
+    }
+  }
+}
+
+@media only screen and (max-width: 675px) {
+  .result {width: 100% / 3}
+  .result-group.row .result:nth-child(4) {
+    display: none;
+  }
+}
