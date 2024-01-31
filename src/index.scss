@@ -64,8 +64,26 @@ h1 {
 }
 
 @media only screen and (max-width: 675px) {
-  .result {width: 100% / 3}
-  .result-group.row .result:nth-child(4) {
-    display: none;
+  .result-group {
+    .result {
+      width: calc(100% / 3);
+    }
+
+    &.row .result:nth-child(4) {
+      display: none;
+    }
+  }
+}
+
+@media only screen and (max-width: 540px) {
+  //TODO: add rule for searchbar to not take up so much space
+  .result-group {
+    .result {
+      width: 50%
+    }
+
+    &.row .result:nth-child(3) {
+      display: none;
+    }
   }
 }
