@@ -82,8 +82,6 @@ function App() {
 		urlToBeDownloaded: string,
 		fileName: string | undefined,
 	) {
-		console.log({ urlToBeDownloaded });
-
 		const data = new URLSearchParams();
 		data.append("url", urlToBeDownloaded);
 		fetch("http://spotifycode.dodger.ch:5000/getCode", {
