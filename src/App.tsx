@@ -11,16 +11,19 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 import { LinkSection } from "./components/LinkSection/LinkSection.tsx";
 import { IoSearchOutline } from "react-icons/io5";
 import { SearchResult } from "./components/SearchResult/SearchResult.tsx";
+import Token from "./components/Token.ts";
 
 // const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9";
 const REDIRECT_URI = `http://${window.location.hostname}:${window.location.port}`;
 const AUTH_URL = new URL("https://accounts.spotify.com/authorize")
-const TOKEN_URL = new URL("https://accounts.spotify.com/api/token")
 
 function App() {
 	const [stlUrl, setStlUrl] = useState<string>("");
-	const [token, setToken] = useState<{access_token: string, refresh_token:string} | null>();
-	const [searchResults, setSearchResults] = useState<{
+    const [token, setToken] = useState<Token | null>(() => {
+        const storedToken = localStorage.getItem('token');
+        return storedToken ? JSON.parse(storedToken) : null;
+    });
+    const [searchResults, setSearchResults] = useState<{
 		artists: Artist[];
 		albums: Album[];
 		tracks: Track[];
@@ -33,23 +36,22 @@ function App() {
 	});
 
 	useEffect(() => {
-		console.log("token", token)
-		const urlParams = new URLSearchParams(window.location.search);
-		const code = urlParams.get('code') ?? "";
-		getToken(code, REDIRECT_URI, TOKEN_URL).then((token) => setToken(token))
+        if (token === null) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code') ?? "";
+            getToken(code, REDIRECT_URI)
+                .then((token) => setToken(token))
+        }
 	})
 
 	function search(input: string) {
-		// const token = localStorage.getItem("token")
-		// const token = "BQDrsbGbpOoeQwMV7UAazLMcwUulDVevL1T7b2KK4utMtfUYXC…fbqSlmjad6gAoZJnG-TvgMVxj4JTgUUi5DPjwOQ2cnWawkhMg";
 		const requestParameters = {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
-				Authorization: "Bearer " + token,
+				Authorization: "Bearer " + token?.access_token,
 			},
 		};
-		console.log(requestParameters)
 		fetch(
 			"https://api.spotify.com/v1/search?q=" +
 				input +
@@ -96,7 +98,7 @@ function App() {
 			{stlUrl && <StlViewer orbitControls shadows url={stlUrl} />}
 
 			<header>
-				{typeof token === "undefined" ? (
+				{token === null ? (
 					<div>
 						Want to search for Songs, Playlists and more?
 						<a onClick={() => {
