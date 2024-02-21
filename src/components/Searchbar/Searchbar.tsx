@@ -12,14 +12,10 @@ interface SearchbarProps {
 export const Searchbar: FC<SearchbarProps> = ({ onSubmit, placeholder, icon }) => {
 	const [searchValue, setSearchValue] = useState("");
 
-	const enterListener = (e: React.KeyboardEvent) => {
-		if (e.key === "Enter") {
+    useEffect(() => {
+		if (searchValue !== "") {
 			onSubmit(searchValue);
 		}
-	};
-
-    useEffect(() => {
-        onSubmit(searchValue);
     }, [searchValue])
 
 	return (
@@ -32,7 +28,6 @@ export const Searchbar: FC<SearchbarProps> = ({ onSubmit, placeholder, icon }) =
 					onChange={(e) => {
 						setSearchValue(e.target.value);
 					}}
-					onKeyDown={enterListener}
 				/>
 				{searchValue.length > 0 && (
 					<RxCross2 onClick={() => setSearchValue("")}/>

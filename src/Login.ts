@@ -1,3 +1,6 @@
+import axios from "axios";
+import Token from "./components/Token.ts";
+
 const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9";
 
 export default async function Login(redirectUri: string, authUrl: URL) {
@@ -44,29 +47,27 @@ const base64encode = (input: ArrayBuffer): string => {
         .replace(/\//g, '_');
 }
 
-export const getToken = async (code: string, redirectUri: string, authUrl: URL) => {
-    // stored in the previous step
+export const getToken = async (code: string, redirectUri: string): Promise<Token> => {
     const codeVerifier = localStorage.getItem('code_verifier') ?? "";
 
-    const payload = {
-        method: 'POST',
+    const payload = new URLSearchParams({
+        client_id: CLIENT_ID,
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: redirectUri,
+        code_verifier: codeVerifier,
+    });
+    const response = await axios.post("https://accounts.spotify.com/api/token", payload, {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: new URLSearchParams({
-            client_id: CLIENT_ID,
-            grant_type: 'authorization_code',
-            code,
-            redirect_uri: redirectUri,
-            code_verifier: codeVerifier,
-        }),
-    };
-    console.log(payload.body.toString())
-    fetch(authUrl, payload)
-        .then((response) => response.json())
-        .then((data) => {
-            // console.log("data",data)
-            // localStorage.setItem('token', data.access_token);
-            return data;
-        })
+    });
+
+    const token: { access_token: string, refresh_token: string } = {
+        access_token: response.data.access_token,
+        refresh_token: response.data.refresh_token
+    }
+    //TODO: implement refreshing token
+    localStorage.setItem('token', JSON.stringify(token));
+    return token;
 }
