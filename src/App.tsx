@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
-import Login, {getToken} from "./Login.ts";
+import Login, { getToken } from "./Login.ts";
 import Track from "./components/SearchResult/Track.ts";
 import Artist from "./components/SearchResult/Artist.ts";
 import Album from "./components/SearchResult/Album.ts";
@@ -15,15 +15,15 @@ import Token from "./components/Token.ts";
 
 // const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9";
 const REDIRECT_URI = `http://${window.location.hostname}:${window.location.port}`;
-const AUTH_URL = new URL("https://accounts.spotify.com/authorize")
+const AUTH_URL = new URL("https://accounts.spotify.com/authorize");
 
 function App() {
 	const [stlUrl, setStlUrl] = useState<string>("");
-    const [token, setToken] = useState<Token | null>(() => {
-        const storedToken = localStorage.getItem('token');
-        return storedToken ? JSON.parse(storedToken) : null;
-    });
-    const [searchResults, setSearchResults] = useState<{
+	const [token, setToken] = useState<Token | null>(() => {
+		const storedToken = localStorage.getItem("token");
+		return storedToken ? JSON.parse(storedToken) : null;
+	});
+	const [searchResults, setSearchResults] = useState<{
 		artists: Artist[];
 		albums: Album[];
 		tracks: Track[];
@@ -36,13 +36,12 @@ function App() {
 	});
 
 	useEffect(() => {
-        if (token === null) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code') ?? "";
-            getToken(code, REDIRECT_URI)
-                .then((token) => setToken(token))
-        }
-	})
+		if (token === null) {
+			const urlParams = new URLSearchParams(window.location.search);
+			const code = urlParams.get("code") ?? "";
+			getToken(code, REDIRECT_URI).then((token) => setToken(token));
+		}
+	});
 
 	function search(input: string) {
 		const requestParameters = {
@@ -101,9 +100,10 @@ function App() {
 				{token === null ? (
 					<div>
 						Want to search for Songs, Playlists and more?
-						<a onClick={() => {
-							Login(REDIRECT_URI, AUTH_URL)
-						}}
+						<a
+							onClick={() => {
+								Login(REDIRECT_URI, AUTH_URL);
+							}}
 							// href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token`}
 						>
 							Login to Spotify

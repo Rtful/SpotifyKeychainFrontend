@@ -1,26 +1,26 @@
 @import "../../styles/variables.scss";
 
 .result {
-    cursor: pointer;
-    width: 20%;
-    padding: 16px;
-    background-color: $result-background-color;
-    border-radius: 8px;
-    margin: 0.5rem;
-    font-size: small;
-    color: $passive-text-color;
-    //Causing issues with the width of the search results  
-    //overflow: hidden;
-    //white-space: nowrap;
+	cursor: pointer;
+	width: 20%;
+	padding: 16px;
+	background-color: $result-background-color;
+	border-radius: 8px;
+	margin: 0.5rem;
+	font-size: small;
+	color: $passive-text-color;
+	//Causing issues with the width of the search results
+	//overflow: hidden;
+	//white-space: nowrap;
 }
 
 .result:hover {
-    background-color: $result-background-color-hover;
+	background-color: $result-background-color-hover;
 }
 
 .result .result-title {
-    max-width: 200px;
-    color: $text-color;
-    font-size: medium;
-    text-overflow: ellipsis;
+	max-width: 200px;
+	color: $text-color;
+	font-size: medium;
+	text-overflow: ellipsis;
 }

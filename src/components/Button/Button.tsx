@@ -7,5 +7,9 @@ interface ButtonProps {
 }
 
 export const Button: FC<ButtonProps> = ({ children, onClick }) => {
-	return <button tabIndex={-1} onClick={onClick}>{children}</button>;
+	return (
+		<button tabIndex={-1} onClick={onClick}>
+			{children}
+		</button>
+	);
 };
