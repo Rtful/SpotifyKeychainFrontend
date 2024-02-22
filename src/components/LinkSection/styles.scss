@@ -16,8 +16,9 @@
 		height: 100%;
 		padding: 0;
 		padding-left: 1rem;
+		width: 0;
 		font-size: medium;
-		transition: 0.3s ease-in;
+		transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	input:focus-visible {
@@ -28,7 +29,6 @@
 .link-section[data-active="true"] {
 	display: flex;
 	padding: 6px 16px 6px 16px;
-	display: flex;
 	align-items: center;
 	border: 2px solid $searchbar-color;
 	background-color: $searchbar-color;
@@ -64,13 +64,13 @@
 }
 
 .link-section[data-active="false"] {
-	background-color: transparent;
-	border: none !important;
-	text-align: left;
+	border: 2px solid #242424;
+    background-color: #242424;
 
 	input {
 		width: 0;
 		padding: 0;
+		color: transparent;
 	}
 }
 
