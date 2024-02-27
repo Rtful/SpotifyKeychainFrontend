@@ -12,11 +12,13 @@ button {
 	padding: 0;
 	border: none;
 	cursor: pointer;
-	font-size: medium;
+    font-size: 20px;
+    color: $passive-text-color;
 }
 
 button:hover {
-	scale: 108%;
+    background-color: $searchbar-color-hover;
+    color: $text-color;
 }
 
 .download-button {

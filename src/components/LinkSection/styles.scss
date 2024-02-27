@@ -52,6 +52,12 @@
     .close-icon {
 		width: 25px;
         height: 25px;
+
+		svg {
+			width: 25px;
+			height: 25px;
+			color: $passive-text-color;
+		}
 	}
 }
 
@@ -64,7 +70,6 @@
 }
 
 .link-section[data-active="false"] {
-	border: 2px solid #242424;
     background-color: #242424;
 
 	input {
@@ -74,23 +79,10 @@
 	}
 }
 
-.link-section {
-	svg {
-		width: 25px;
-		height: 25px;
-		color: $passive-text-color;
-	}
-}
-
 .link-section:hover {
+	background-color: $searchbar-color-hover !important;
+
 	svg {
 		color: $text-color;
 	}
-
-	background-color: $searchbar-color-hover !important;
-}
-
-.link-section svg.link-icon {
-	width: 20px;
-	height: 20px;
 }

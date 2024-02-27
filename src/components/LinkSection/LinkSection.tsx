@@ -41,7 +41,7 @@ export const LinkSection: FC<linkButtonProps> = ({ onSubmit, icon }) => {
 
 				<div className="close-icon">
 					{searchValue.length > 0 && (
-						<RxCross2 onClick={() => setSearchValue("")} />
+						<RxCross2 onClick={() => setSearchValue("")}/>
 					)}
 				</div>
 			</>
