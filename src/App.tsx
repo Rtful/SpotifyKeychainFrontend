@@ -15,6 +15,7 @@ import { SearchResultCard } from "./components/SearchResult/SearchResultCard.tsx
 import Track from "./components/SearchResult/Track.ts";
 import { Searchbar } from "./components/Searchbar/Searchbar.tsx";
 import Token from "./components/Token.ts";
+import { useSnackbar } from "notistack";
 
 // const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9";
 const REDIRECT_URI = `http://${window.location.hostname}:${window.location.port}`;
@@ -23,10 +24,11 @@ const AUTH_URL = new URL("https://accounts.spotify.com/authorize");
 function App() {
 	const [stlUrl, setStlUrl] = useState<string>("");
 	const [isStlViewerOpen, setIsStlViewerOpen] = useState(false);
+	const { enqueueSnackbar } = useSnackbar();
 
 	useEffect(() => {
-		if(stlUrl) setIsStlViewerOpen(true);
-	}, [stlUrl])
+		if (stlUrl) setIsStlViewerOpen(true);
+	}, [stlUrl]);
 
 	const [token, setToken] = useState<Token | null>(() => {
 		const storedToken = localStorage.getItem("token");
@@ -77,7 +79,6 @@ function App() {
 			});
 	}
 
-	// download
 	function download3dModel(
 		urlToBeDownloaded: string,
 		fileName: string | undefined,
@@ -98,6 +99,14 @@ function App() {
 				document.body.appendChild(link);
 				link.click();
 				link.remove();
+			})
+			.then(() => {
+				enqueueSnackbar("Downloaded " + fileName, {
+					autoHideDuration: 5000,
+					preventDuplicate: false,
+					variant: "success",
+					anchorOrigin: { horizontal: "center", vertical: "bottom" },
+				});
 			});
 	}
 
@@ -106,13 +115,17 @@ function App() {
 			{stlUrl && isStlViewerOpen && (
 				<div className="stl-viewer">
 					<StlViewer orbitControls shadows url={stlUrl} />
-					<Button onClick={() => {setIsStlViewerOpen(false)}}>
+					<Button
+						onClick={() => {
+							setIsStlViewerOpen(false);
+						}}
+					>
 						<RxCross2 />
 					</Button>
 				</div>
 			)}
 
-			<div className="main-content">
+			<div className="content">
 				<header>
 					{token === null ? (
 						<div>
@@ -139,118 +152,101 @@ function App() {
 					<LinkSection
 						icon={<FaExternalLinkAlt className="link-icon" />}
 						onSubmit={download3dModel}
-						// TODO: make request for appropriate type and get the name of the track, playlist, artist or album
-						// example: 65mUrGkPCn1cZIucA5FXmZ from https://open.spotify.com/playlist/65mUrGkPCn1cZIucA5FXmZ?si=7015af7042a64a44
-						// https://api.spotify.com/v1/playlists/65mUrGkPCn1cZIucA5FXmZ}}
 					/>
 				</header>
 
-				<div className="content">
-					<div id={"results"}>
-						{searchResults.tracks.length != 0 && (
-							<div className={"result-group column"}>
-								<h2>Songs</h2>
-								<div
-									id={"tracks"}
-									className={"result-container"}
-								>
-									{searchResults.tracks.map(
-										(track: Track) => (
-											<SearchResultBar
-												result={track}
-												onClickFunction={() => {
-													download3dModel(
-														track.external_urls
-															.spotify,
-														track.name,
-													);
-												}}
-												key={track.uri}
-											/>
-										),
-									)}
-								</div>
+				<div id={"results"}>
+					{searchResults.tracks.length != 0 && (
+						<div className={"result-group column"}>
+							<h2>Songs</h2>
+							<div id={"tracks"} className={"result-container"}>
+								{searchResults.tracks.map((track: Track) => (
+									<SearchResultBar
+										result={track}
+										onClickFunction={() => {
+											download3dModel(
+												track.external_urls.spotify,
+												track.name,
+											);
+										}}
+										key={track.uri}
+									/>
+								))}
 							</div>
-						)}
+						</div>
+					)}
 
-						{searchResults.tracks.length != 0 && (
-							<div className={"result-group column"}>
-								<h2>Artists</h2>
-								<div className={"result-container artists"}>
-									{searchResults.artists.map(
-										(artist: Artist) => (
-											<SearchResultBar
-												result={artist}
-												onClickFunction={() => {
-													download3dModel(
-														artist.external_urls
-															.spotify,
-														artist.name,
-													);
-												}}
-												key={artist.uri}
-											/>
-										),
-									)}
-								</div>
+					{searchResults.tracks.length != 0 && (
+						<div className={"result-group column"}>
+							<h2>Artists</h2>
+							<div className={"result-container artists"}>
+								{searchResults.artists.map((artist: Artist) => (
+									<SearchResultBar
+										result={artist}
+										onClickFunction={() => {
+											download3dModel(
+												artist.external_urls.spotify,
+												artist.name,
+											);
+										}}
+										key={artist.uri}
+									/>
+								))}
 							</div>
-						)}
+						</div>
+					)}
 
-						{searchResults.tracks.length != 0 && (
-							<div className={"result-group row"}>
-								<h2>Albums</h2>
-								<div className={"result-container"}>
-									{searchResults.albums.map(
-										(album: Album) => (
-											<SearchResultCard
-												result={album}
-												onClickFunction={() => {
-													download3dModel(
-														album.external_urls
-															.spotify,
-														album.name,
-													);
-												}}
-												key={album.uri}
-											/>
-										),
-									)}
-								</div>
+					{searchResults.tracks.length != 0 && (
+						<div className={"result-group row"}>
+							<h2>Albums</h2>
+							<div className={"result-container"}>
+								{searchResults.albums.map((album: Album) => (
+									<SearchResultCard
+										result={album}
+										onClickFunction={() => {
+											download3dModel(
+												album.external_urls.spotify,
+												album.name,
+											);
+										}}
+										key={album.uri}
+									/>
+								))}
 							</div>
-						)}
+						</div>
+					)}
 
-						{searchResults.tracks.length != 0 && (
-							<div className={"result-group row"}>
-								<h2>Playlists</h2>
-								<div
-									id={"playlists"}
-									className={"result-container"}
-								>
-									{searchResults.playlists.map(
-										(playlist: Playlist) => (
-											<SearchResultCard
-												result={playlist}
-												onClickFunction={() => {
-													download3dModel(
-														playlist.external_urls
-															.spotify,
-														playlist.name,
-													);
-												}}
-												key={playlist.uri}
-											/>
-										),
-									)}
-								</div>
+					{searchResults.tracks.length != 0 && (
+						<div className={"result-group row"}>
+							<h2>Playlists</h2>
+							<div
+								id={"playlists"}
+								className={"result-container"}
+							>
+								{searchResults.playlists.map(
+									(playlist: Playlist) => (
+										<SearchResultCard
+											result={playlist}
+											onClickFunction={() => {
+												download3dModel(
+													playlist.external_urls
+														.spotify,
+													playlist.name,
+												);
+											}}
+											key={playlist.uri}
+										/>
+									),
+								)}
 							</div>
-						)}
-					</div>
+						</div>
+					)}
 				</div>
-
-				{/*<div>*/}
-				{/*    <Player accessToken={accessToken} trackUri={playingTrack?.href}/>*/}
-				{/*</div>*/}
 			</div>
+
+			{/*<div>*/}
+			{/*    <Player accessToken={accessToken} trackUri={playingTrack?.href}/>*/}
+			{/*</div>*/}
 		</>
 	);
 }

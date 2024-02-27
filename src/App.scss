@@ -8,7 +8,7 @@
 }
 
 .stl-viewer {
-    position: relative;
+	position: relative;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -20,15 +20,15 @@
 	border-radius: 8px;
 	margin-bottom: 8px;
 
-    button {
-        position: absolute;
-        top: 2rem;
-        right: 2rem;
-        z-index: 100;
-    }
+	button {
+		position: absolute;
+		top: 2rem;
+		right: 2rem;
+		z-index: 100;
+	}
 }
 
-.main-content {
+.content {
 	padding: 2rem;
 	background-color: $widget-background-color;
 	border-radius: 8px;
@@ -42,8 +42,11 @@
 		}
 	}
 
-	.content {
+	#results {
 		padding-top: 2rem;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
 	}
 }
 
