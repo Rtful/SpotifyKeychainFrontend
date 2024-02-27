@@ -19,6 +19,10 @@ header {
     }
 }
 
+.stl-viewer {
+    width: 100%;
+}
+
 .content {
     padding-top: 2rem;
 }
@@ -66,77 +70,6 @@ header {
     width: 100%;
 }
 
-.result-container img {
-    height: 64px;
-    width: 64px;
-    border-radius: 4px;
-}
-
-.result-container.artists img {
-    margin-right: 1rem;
-}
-
-#tracks.result-container img {
-    margin-right: 1rem;
-}
-
-.artists img {
-    border-radius: 9999px
-}
-
-.result-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.result-group.column .result {
-    width: auto;
-    display: flex;
-    align-items: center;
-    text-align: left;
-}
-
-.result-group h2 {
-    text-align: left;
-    padding-left: 10px;
-    margin-bottom: 0;
-}
-
-.result-group.column {
-    width: 50%;
-}
-
-.result-group.row {
-    width: 100%;
-
-    .result .result-title {
-        font-weight: bold;
-        font-size: medium;
-    }
-
-    .result img {
-        width: 100%;
-        height: auto;
-    }
-}
-
-.result-group.column .result-container {
-    flex-direction: column;
-}
-
-#results {
-    /*display: grid;*/
-    /*grid-template-columns: 50% 50%;*/
-    /*grid-template-rows: 50% 25% 25%;*/
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.result-group.column .result-container {
-    flex-direction: column;
-    width: 100%;
-}
 /*
 
 .result-group:nth-child(1) {

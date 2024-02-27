@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
-import Login, {getToken} from "./Login.ts";
+import Login, { getToken } from "./Login.ts";
 import Track from "./components/SearchResult/Track.ts";
 import Artist from "./components/SearchResult/Artist.ts";
 import Album from "./components/SearchResult/Album.ts";
@@ -10,20 +10,21 @@ import { Searchbar } from "./components/Searchbar/Searchbar.tsx";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { LinkSection } from "./components/LinkSection/LinkSection.tsx";
 import { IoSearchOutline } from "react-icons/io5";
-import { SearchResult } from "./components/SearchResult/SearchResult.tsx";
 import Token from "./components/Token.ts";
+import { SearchResultBar } from "./components/SearchResult/SearchResultBar.tsx";
+import { SearchResultCard } from "./components/SearchResult/SearchResultCard.tsx";
 
 // const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9";
 const REDIRECT_URI = `http://${window.location.hostname}:${window.location.port}`;
-const AUTH_URL = new URL("https://accounts.spotify.com/authorize")
+const AUTH_URL = new URL("https://accounts.spotify.com/authorize");
 
 function App() {
 	const [stlUrl, setStlUrl] = useState<string>("");
-    const [token, setToken] = useState<Token | null>(() => {
-        const storedToken = localStorage.getItem('token');
-        return storedToken ? JSON.parse(storedToken) : null;
-    });
-    const [searchResults, setSearchResults] = useState<{
+	const [token, setToken] = useState<Token | null>(() => {
+		const storedToken = localStorage.getItem("token");
+		return storedToken ? JSON.parse(storedToken) : null;
+	});
+	const [searchResults, setSearchResults] = useState<{
 		artists: Artist[];
 		albums: Album[];
 		tracks: Track[];
@@ -36,13 +37,12 @@ function App() {
 	});
 
 	useEffect(() => {
-        if (token === null) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code') ?? "";
-            getToken(code, REDIRECT_URI)
-                .then((token) => setToken(token))
-        }
-	})
+		if (token === null) {
+			const urlParams = new URLSearchParams(window.location.search);
+			const code = urlParams.get("code") ?? "";
+			getToken(code, REDIRECT_URI).then((token) => setToken(token));
+		}
+	});
 
 	function search(input: string) {
 		const requestParameters = {
@@ -101,9 +101,10 @@ function App() {
 				{token === null ? (
 					<div>
 						Want to search for Songs, Playlists and more?
-						<a onClick={() => {
-							Login(REDIRECT_URI, AUTH_URL)
-						}}
+						<a
+							onClick={() => {
+								Login(REDIRECT_URI, AUTH_URL);
+							}}
 							// href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token`}
 						>
 							Login to Spotify
@@ -135,7 +136,7 @@ function App() {
 							<h2>Songs</h2>
 							<div id={"tracks"} className={"result-container"}>
 								{searchResults.tracks.map((track: Track) => (
-									<SearchResult
+									<SearchResultBar
 										result={track}
 										onClickFunction={() => {
 											download3dModel(
@@ -155,7 +156,7 @@ function App() {
 							<h2>Artists</h2>
 							<div className={"result-container artists"}>
 								{searchResults.artists.map((artist: Artist) => (
-									<SearchResult
+									<SearchResultBar
 										result={artist}
 										onClickFunction={() => {
 											download3dModel(
@@ -175,7 +176,7 @@ function App() {
 							<h2>Albums</h2>
 							<div className={"result-container"}>
 								{searchResults.albums.map((album: Album) => (
-									<SearchResult
+									<SearchResultCard
 										result={album}
 										onClickFunction={() => {
 											download3dModel(
@@ -199,7 +200,7 @@ function App() {
 							>
 								{searchResults.playlists.map(
 									(playlist: Playlist) => (
-										<SearchResult
+										<SearchResultCard
 											result={playlist}
 											onClickFunction={() => {
 												download3dModel(

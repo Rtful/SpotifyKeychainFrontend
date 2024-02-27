@@ -1,23 +1,64 @@
 @import "../../styles/variables.scss";
 
 button {
-    height: 52px;
-    width: 52px;
-    background-color: $searchbar-color;
-    border-radius: 999999px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    padding: 0;
-    border: none;
-    cursor: pointer;
-    font-size: medium;
+	height: 52px;
+	width: 52px;
+	background-color: $searchbar-color;
+	border-radius: 999999px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
+	padding: 0;
+	border: none;
+	cursor: pointer;
+	font-size: medium;
 }
 
 button:hover {
-    scale: 108%;
+	scale: 108%;
 }
 
+.download-button {
+	display: flex;
+	opacity: 0;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+	background-color: $button-color;
+	//pointer-events: none;
+	inset: auto auto 0px 0px;
+	transition: all 0.3s ease;
+	border-radius: 9999999px;
+	color: $button-font-color;
+}
 
+.download-button:hover {
+	background-color: $button-color-highlight;
+	transform: scale(1.04) !important;
+}
 
+.result-card {
+	.download-button {
+		width: 48px;
+		height: 48px;
+		font-size: 30px;
+		bottom: 8px;
+		right: 8px;
+		left: auto;
+		transform: translate(0, 5px);
+	}
+}
+
+.result-bar {
+	.download-button {
+		width: 40px;
+		height: 40px;
+		font-size: 25px;
+		position: relative;
+	}
+}
