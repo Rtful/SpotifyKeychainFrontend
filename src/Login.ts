@@ -47,7 +47,7 @@ const base64encode = (input: ArrayBuffer): string => {
         .replace(/\//g, '_');
 }
 
-export const getToken = async (code: string, redirectUri: string): Promise<Token> => {
+export const getAccessToken = async (code: string, redirectUri: string): Promise<Token> => {
     const codeVerifier = localStorage.getItem('code_verifier') ?? "";
 
     const payload = new URLSearchParams({

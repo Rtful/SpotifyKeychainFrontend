@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
-import Login, {getToken} from "./Login.ts";
+import Login, {getAccessToken} from "./Login.ts";
 import Track from "./components/SearchResult/Track.ts";
 import Artist from "./components/SearchResult/Artist.ts";
 import Album from "./components/SearchResult/Album.ts";
@@ -39,7 +39,7 @@ function App() {
         if (token === null) {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code') ?? "";
-            getToken(code, REDIRECT_URI)
+            getAccessToken(code, REDIRECT_URI)
                 .then((token) => setToken(token))
         }
 	})
@@ -101,10 +101,10 @@ function App() {
 				{token === null ? (
 					<div>
 						Want to search for Songs, Playlists and more?
-						<a onClick={() => {
-							Login(REDIRECT_URI, AUTH_URL)
-						}}
-							// href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token`}
+						<a
+							onClick={() => {
+								Login(REDIRECT_URI, AUTH_URL);
+							}}
 						>
 							Login to Spotify
 						</a>
@@ -115,6 +115,14 @@ function App() {
 							placeholder="What do you want to search?"
 							onSubmit={search}
 							icon={<IoSearchOutline />}
+							clearFunction={() => {
+                                setSearchResults({
+                                    artists: [],
+                                    albums: [],
+                                    tracks: [],
+                                    playlists: [],
+                                });
+							}}
 						/>
 					</>
 				)}

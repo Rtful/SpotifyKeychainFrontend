@@ -4,33 +4,43 @@ import { RxCross2 } from "react-icons/rx";
 
 interface SearchbarProps {
 	onSubmit: (search: string) => void;
-    placeholder: string;
-    icon?: ReactNode;
-    onIconClick?: () => void;
+	clearFunction: () => void;
+	placeholder: string;
+	icon?: ReactNode;
 }
 
-export const Searchbar: FC<SearchbarProps> = ({ onSubmit, placeholder, icon }) => {
+export const Searchbar: FC<SearchbarProps> = ({
+	onSubmit,
+	placeholder,
+	icon,
+	clearFunction,
+}) => {
 	const [searchValue, setSearchValue] = useState("");
 
-    useEffect(() => {
-		if (searchValue !== "") {
-			onSubmit(searchValue);
-		}
-    }, [searchValue])
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			if (searchValue !== "") {
+				onSubmit(searchValue);
+			} else {
+				clearFunction();
+			}
+		}, 200);
+		return () => clearTimeout(timer);
+	}, [searchValue, onSubmit, clearFunction]);
 
 	return (
 		<>
 			<div className="searchbar">
-                {icon}
+				{icon}
 				<input
 					placeholder={placeholder}
 					value={searchValue}
-					onChange={(e) => {
-						setSearchValue(e.target.value);
+					onInput={(e) => {
+						setSearchValue(e.currentTarget.value);
 					}}
 				/>
 				{searchValue.length > 0 && (
-					<RxCross2 onClick={() => setSearchValue("")}/>
+					<RxCross2 onClick={() => setSearchValue("")} />
 				)}
 			</div>
 		</>
