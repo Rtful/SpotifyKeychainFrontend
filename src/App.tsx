@@ -4,7 +4,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { StlViewer } from "react-stl-viewer";
 import "./App.scss";
-import Login, { getAccessToken } from "./Login.ts";
+import Login, { getAccessToken, refreshToken } from "./Login.ts";
 import { Button } from "./components/Button/Button.tsx";
 import { LinkSection } from "./components/LinkSection/LinkSection.tsx";
 import Album from "./components/SearchResult/Album.ts";
@@ -16,6 +16,7 @@ import Track from "./components/SearchResult/Track.ts";
 import { Searchbar } from "./components/Searchbar/Searchbar.tsx";
 import Token from "./components/Token.ts";
 import { useSnackbar } from "notistack";
+import axios from "axios";
 
 // const CLIENT_ID = "35e420fcea2b456ba34b98c24b1610b9";
 const REDIRECT_URI = `http://${window.location.hostname}:${window.location.port}`;
@@ -25,11 +26,6 @@ function App() {
 	const [stlUrl, setStlUrl] = useState<string>("");
 	const [isStlViewerOpen, setIsStlViewerOpen] = useState(false);
 	const { enqueueSnackbar } = useSnackbar();
-
-	useEffect(() => {
-		if (stlUrl) setIsStlViewerOpen(true);
-	}, [stlUrl]);
-
 	const [token, setToken] = useState<Token | null>(() => {
 		const storedToken = localStorage.getItem("token");
 		return storedToken ? JSON.parse(storedToken) : null;
@@ -45,8 +41,35 @@ function App() {
 		tracks: [],
 		playlists: [],
 	});
+	const searchApi = axios.create({
+		baseURL: "https://api.spotify.com/v1",
+	});
 
 	useEffect(() => {
+		if (stlUrl) setIsStlViewerOpen(true);
+	}, [stlUrl]);
+
+	useEffect(() => {
+		// Detects if token has run out and automatically refreshes it.
+		searchApi.interceptors.response.use(
+			(response) => {
+				return response;
+			},
+			async (error) => {
+				if (error.response.status === 401) {
+					if (token !== null) {
+						refreshToken(token.refresh_token).then((newToken) =>
+							setToken(newToken),
+						);
+						// Retry the original request with the new access token
+						searchApi(error.config).catch((error) => {
+							alert(error.status);
+						});
+					}
+				}
+				return Promise.reject(error);
+			},
+		);
 		if (token === null) {
 			const urlParams = new URLSearchParams(window.location.search);
 			const code = urlParams.get("code") ?? "";
@@ -55,27 +78,28 @@ function App() {
 	});
 
 	function search(input: string) {
-		const requestParameters = {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: "Bearer " + token?.access_token,
-			},
-		};
-		fetch(
-			"https://api.spotify.com/v1/search?q=" +
-				input +
-				"&type=album%2Ctrack%2Cartist%2Cplaylist&limit=5",
-			requestParameters,
-		)
-			.then((response) => response.json())
-			.then((data) => {
+		searchApi
+			.get("https://api.spotify.com/v1/search", {
+				params: {
+					q: input,
+					type: "album,track,artist,playlist",
+					limit: 5,
+				},
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: "Bearer " + token?.access_token,
+				},
+			})
+			.then((response) => {
 				setSearchResults({
-					tracks: data.tracks.items,
-					albums: data.albums.items,
-					artists: data.artists.items,
-					playlists: data.playlists.items,
+					tracks: response.data.tracks.items,
+					albums: response.data.albums.items,
+					artists: response.data.artists.items,
+					playlists: response.data.playlists.items,
 				});
+			})
+			.catch((error) => {
+				console.error("Error fetching data:", error);
 			});
 	}
 
