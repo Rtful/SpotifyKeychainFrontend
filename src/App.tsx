@@ -13,7 +13,6 @@ import Playlist from "./components/SearchResult/Playlist.ts";
 import { SearchResultBar } from "./components/SearchResult/SearchResultBar.tsx";
 import { SearchResultCard } from "./components/SearchResult/SearchResultCard.tsx";
 import Track from "./components/SearchResult/Track.ts";
-import { StlViewer } from "react-stl-viewer";
 import { Searchbar } from "./components/Searchbar/Searchbar.tsx";
 import Token from "./components/Token.ts";
 import { useSnackbar } from "notistack";
@@ -48,13 +47,12 @@ function App() {
 	});
 
 	useEffect(() => {
-        if (token === null) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get("code") ?? "";
-            getAccessToken(code, REDIRECT_URI)
-                .then((token) => setToken(token))
-        }
-	})
+		if (token === null) {
+			const urlParams = new URLSearchParams(window.location.search);
+			const code = urlParams.get("code") ?? "";
+			getAccessToken(code, REDIRECT_URI).then((token) => setToken(token));
+		}
+	});
 
 	function search(input: string) {
 		const requestParameters = {
@@ -143,19 +141,19 @@ function App() {
 						</div>
 					) : (
 						<>
-                            <Searchbar
-                                placeholder="What do you want to search?"
-                                onSubmit={search}
-                                icon={<IoSearchOutline />}
-                                clearFunction={() => {
-                                    setSearchResults({
-                                        artists: [],
-                                        albums: [],
-                                        tracks: [],
-                                        playlists: [],
-                                    });
-                                }}
-                            />
+							<Searchbar
+								placeholder="What do you want to search?"
+								onSubmit={search}
+								icon={<IoSearchOutline />}
+								clearFunction={() => {
+									setSearchResults({
+										artists: [],
+										albums: [],
+										tracks: [],
+										playlists: [],
+									});
+								}}
+							/>
 						</>
 					)}
 
@@ -165,93 +163,106 @@ function App() {
 					/>
 				</header>
 
-			<div className="content">
-				<div id={"results"}>
-					{searchResults.tracks.length != 0 && (
-						<div className={"result-group column"}>
-							<h2>Songs</h2>
-							<div id={"tracks"} className={"result-container"}>
-								{searchResults.tracks.map((track: Track) => (
-									<SearchResultBar
-										result={track}
-										onClickFunction={() => {
-											download3dModel(
-												track.external_urls.spotify,
-												track.name,
-											);
-										}}
-										key={track.uri}
-									/>
-								))}
+				<div className="content">
+					<div id={"results"}>
+						{searchResults.tracks.length != 0 && (
+							<div className={"result-group column"}>
+								<h2>Songs</h2>
+								<div
+									id={"tracks"}
+									className={"result-container"}
+								>
+									{searchResults.tracks.map(
+										(track: Track) => (
+											<SearchResultBar
+												result={track}
+												onClickFunction={() => {
+													download3dModel(
+														track.external_urls
+															.spotify,
+														track.name,
+													);
+												}}
+												key={track.uri}
+											/>
+										),
+									)}
+								</div>
 							</div>
-						</div>
-					)}
+						)}
 
-					{searchResults.tracks.length != 0 && (
-						<div className={"result-group column"}>
-							<h2>Artists</h2>
-							<div className={"result-container artists"}>
-								{searchResults.artists.map((artist: Artist) => (
-									<SearchResultBar
-										result={artist}
-										onClickFunction={() => {
-											download3dModel(
-												artist.external_urls.spotify,
-												artist.name,
-											);
-										}}
-										key={artist.uri}
-									/>
-								))}
+						{searchResults.tracks.length != 0 && (
+							<div className={"result-group column"}>
+								<h2>Artists</h2>
+								<div className={"result-container artists"}>
+									{searchResults.artists.map(
+										(artist: Artist) => (
+											<SearchResultBar
+												result={artist}
+												onClickFunction={() => {
+													download3dModel(
+														artist.external_urls
+															.spotify,
+														artist.name,
+													);
+												}}
+												key={artist.uri}
+											/>
+										),
+									)}
+								</div>
 							</div>
-						</div>
-					)}
+						)}
 
-					{searchResults.tracks.length != 0 && (
-						<div className={"result-group row"}>
-							<h2>Albums</h2>
-							<div className={"result-container"}>
-								{searchResults.albums.map((album: Album) => (
-									<SearchResultCard
-										result={album}
-										onClickFunction={() => {
-											download3dModel(
-												album.external_urls.spotify,
-												album.name,
-											);
-										}}
-										key={album.uri}
-									/>
-								))}
+						{searchResults.tracks.length != 0 && (
+							<div className={"result-group row"}>
+								<h2>Albums</h2>
+								<div className={"result-container"}>
+									{searchResults.albums.map(
+										(album: Album) => (
+											<SearchResultCard
+												result={album}
+												onClickFunction={() => {
+													download3dModel(
+														album.external_urls
+															.spotify,
+														album.name,
+													);
+												}}
+												key={album.uri}
+											/>
+										),
+									)}
+								</div>
 							</div>
-						</div>
-					)}
+						)}
 
-					{searchResults.tracks.length != 0 && (
-						<div className={"result-group row"}>
-							<h2>Playlists</h2>
-							<div
-								id={"playlists"}
-								className={"result-container"}
-							>
-								{searchResults.playlists.map(
-									(playlist: Playlist) => (
-										<SearchResultCard
-											result={playlist}
-											onClickFunction={() => {
-												download3dModel(
-													playlist.external_urls
-														.spotify,
-													playlist.name,
-												);
-											}}
-											key={playlist.uri}
-										/>
-									),
-								)}
+						{searchResults.tracks.length != 0 && (
+							<div className={"result-group row"}>
+								<h2>Playlists</h2>
+								<div
+									id={"playlists"}
+									className={"result-container"}
+								>
+									{searchResults.playlists.map(
+										(playlist: Playlist) => (
+											<SearchResultCard
+												result={playlist}
+												onClickFunction={() => {
+													download3dModel(
+														playlist.external_urls
+															.spotify,
+														playlist.name,
+													);
+												}}
+												key={playlist.uri}
+											/>
+										),
+									)}
+								</div>
 							</div>
-						</div>
-					)}
+						)}
+					</div>
 				</div>
 			</div>
 
