@@ -30,7 +30,7 @@ export const Searchbar: FC<SearchbarProps> = ({ onSubmit, placeholder, icon }) =
 					}}
 				/>
 				{searchValue.length > 0 && (
-					<RxCross2 onClick={() => setSearchValue("")}/>
+					<RxCross2 onClick={() => setSearchValue("")} className="close-icon"/>
 				)}
 			</div>
 		</>

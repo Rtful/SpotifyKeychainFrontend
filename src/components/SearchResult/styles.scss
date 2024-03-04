@@ -1,21 +1,17 @@
 @import "../../styles/variables.scss";
 
 .result {
-	cursor: pointer;
-	width: 20%;
-	padding: 16px;
-	background-color: $result-background-color;
-	border-radius: 8px;
-	margin: 0.5rem;
-	font-size: small;
-	color: $passive-text-color;
-	//Causing issues with the width of the search results
-	//overflow: hidden;
-	//white-space: nowrap;
+    cursor: pointer;
+    padding: 16px;
+    background-color: $result-background-color;
+    border-radius: 8px;
+    font-size: small;
+    color: $passive-text-color;
+    box-sizing: border-box;
 }
 
 .result:hover {
-	background-color: $result-background-color-hover;
+    background-color: $result-background-color-hover;
 
     .download-button {
         opacity: 1;
@@ -23,24 +19,33 @@
     }
 }
 
-.result .result-title {
-	max-width: 200px;
-	color: $text-color;
-	font-size: medium;
-	text-overflow: ellipsis;
-}
-
 .result {
-	.image-container {
+    .image-container {
         display: flex;
         justify-content: center;
         align-items: center;
         position: relative;
-	}
+    }
+
+    p {
+        margin: 0;
+        min-width: 100%;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .result-title {
+        width: 100%;
+        padding-top: 8px;
+        color: $text-color;
+        font-size: medium;
+        text-overflow: ellipsis;
+    }
 }
 
 .result-bar {
-    width: auto;
+    width: 100%;
     display: flex;
     align-items: center;
     text-align: left;
@@ -54,7 +59,7 @@
     }
 
     .artists img {
-        border-radius: 9999px
+        border-radius: 9999px;
     }
 
     .result-bar-content {
@@ -67,12 +72,15 @@
 }
 
 .result-card {
+    width: calc(20% - 1rem);
+
     .result-title {
         font-weight: bold;
         font-size: medium;
     }
 
     img {
+        border-radius: 6px;
         width: 100%;
         height: auto;
     }
@@ -83,6 +91,7 @@
 .result-group {
     display: flex;
     flex-direction: column;
+    box-sizing: content-box;
 
     h2 {
         text-align: left;
@@ -96,10 +105,11 @@
 
     .result-container {
         flex-direction: column;
-        width: 100%;
+        box-sizing: border-box;
     }
 }
 
 .result-group.row {
     width: 100%;
+    box-sizing: content-box;
 }

@@ -23,7 +23,7 @@ export const SearchResultCard: FC<SearchResultCardProps> = ({
 			</div>
 
 			<div>
-				<div className="result-title">{result.name}</div>
+				<p className="result-title">{result.name}</p>
 				{result.artists ? result.artists[0].name : "Artist"}
 			</div>
 		</div>

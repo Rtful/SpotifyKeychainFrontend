@@ -57,11 +57,12 @@ export const LinkSection: FC<linkButtonProps> = ({ onSubmit, icon }) => {
 					data-avtive={displaySearch}
 				/>
 
-				<div className="close-icon">
-					{searchValue.length > 0 && (
-						<RxCross2 onClick={() => setSearchValue("")} />
-					)}
-				</div>
+				{searchValue.length > 0 && (
+					<RxCross2
+						onClick={() => setSearchValue("")}
+						className="close-icon"
+					/>
+				)}
 			</>
 		</div>
 	);

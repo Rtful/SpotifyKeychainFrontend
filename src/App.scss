@@ -1,10 +1,11 @@
 @import "./styles/variables.scss";
 
 #root {
-	width: 100vw;
+	width: 100%;
+    padding: 8px;
 	height: fit-content;
 	margin: 0 auto;
-	margin: 8px;
+    box-sizing: border-box;
 }
 
 .stl-viewer {
@@ -18,7 +19,7 @@
 	padding: 2rem;
 	background-color: $widget-background-color;
 	border-radius: 8px;
-	margin-bottom: 8px;
+	margin: 8px;
 
 	button {
 		position: absolute;
@@ -30,23 +31,36 @@
 
 .content {
 	padding: 2rem;
+    width: 100%;
 	background-color: $widget-background-color;
+    box-sizing: border-box;
 	border-radius: 8px;
 
 	header {
 		display: flex;
 		width: 100%;
-
-		.link-section {
-			margin-left: auto;
-		}
+        justify-content: space-between;
 	}
 
+    @media only screen and (max-width: $mobile-l) {
+        header {
+			flex-direction: column;
+			width: 100%;
+			box-sizing: border-box;
+            justify-content: baseline;
+
+			.searchbar {
+                margin-bottom: 1rem;
+				box-sizing: border-box;
+				height: 52px;
+				width: 100%;
+			}
+		}
+    }
+
 	#results {
-		padding-top: 2rem;
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: center;
 	}
 }
 
@@ -80,17 +94,25 @@
 	}
 }
 
-.card {
-	padding: 2em;
-}
-
 .read-the-docs {
 	color: #888;
 }
 
+
+
 .result-container {
 	display: flex;
-	width: 100%;
+    justify-content: space-between;
+    box-sizing: content-box;
+    gap: 1rem;
+
+    &.artists {
+        padding-left: 0.5rem;
+    }
+
+    &#tracks {
+        margin-right: 0.5rem;
+    }
 }
 
 /*

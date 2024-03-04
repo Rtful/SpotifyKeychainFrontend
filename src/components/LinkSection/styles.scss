@@ -1,15 +1,13 @@
 @import "../../styles/variables.scss";
 
 .link-section {
+	display: flex;
 	flex-direction: row;
 	border-radius: 9999999px;
-	display: flex;
-	justify-content: center;
 	align-items: center;
 	height: 52px;
-}
+	box-sizing: border-box;
 
-.link-section {
 	input {
 		background-color: transparent;
 		border: none;
@@ -18,7 +16,7 @@
 		padding-left: 1rem;
 		width: 0;
 		font-size: medium;
-		transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+		transition: all cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
 	}
 
 	input:focus-visible {
@@ -32,45 +30,46 @@
 	align-items: center;
 	border: 2px solid $searchbar-color;
 	background-color: $searchbar-color;
-	height: 36px;
 	max-width: 400px;
-
-	button:hover {
-		scale: 100%;
-	}
 
 	button {
 		background-color: transparent;
-		width: 25px;
-		height: 25px;
+		width: fit-content;
+
+		:hover {
+			scale: 100%;
+		}
 	}
 
 	input {
 		width: 300px;
 	}
 
-    .close-icon {
-		width: 25px;
-        height: 25px;
+	.close-icon {
+		font-size: 30px;
+		margin-left: auto;
+		color: $passive-text-color;
+	}
 
-		svg {
-			width: 25px;
-			height: 25px;
-			color: $passive-text-color;
-		}
+	.close-icon:hover {
+		color: $text-color;
 	}
 }
 
 .link-section[data-active="true"]:focus-within {
 	border: 2px solid $text-color !important;
 
-	svg {
+	.link-icon {
 		color: $text-color;
 	}
 }
 
 .link-section[data-active="false"] {
-    background-color: #242424;
+	background-color: #242424;
+
+	@media only screen and (max-width: 867px) {
+		margin-right: auto;
+	}
 
 	input {
 		width: 0;
@@ -82,7 +81,7 @@
 .link-section:hover {
 	background-color: $searchbar-color-hover !important;
 
-	svg {
+	.link-icon {
 		color: $text-color;
 	}
 }
