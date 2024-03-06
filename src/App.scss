@@ -108,10 +108,18 @@
 
     &.artists {
         padding-left: 0.5rem;
+
+        @media only screen and (max-width: $mobile-l) {
+            padding-left: 0rem;
+        }
     }
 
     &#tracks {
         margin-right: 0.5rem;
+        
+        @media only screen and (max-width: $mobile-l) {
+            padding-left: 0rem;
+        }
     }
 }
 
