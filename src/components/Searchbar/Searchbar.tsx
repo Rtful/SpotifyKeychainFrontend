@@ -17,7 +17,7 @@ export const Searchbar: FC<SearchbarProps> = ({
 }) => {
 	const [searchValue, setSearchValue] = useState("");
 	const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
-	const searchTimeout = 200;
+	const searchTimeout = 250;
 
 	useEffect(() => {
 		clearTimeout(timeoutRef.current);
