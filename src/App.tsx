@@ -58,13 +58,15 @@ function App() {
 			async (error) => {
 				if (error.response.status === 401) {
 					if (token !== null) {
-						refreshToken(token.refresh_token).then((newToken) =>
-							setToken(newToken),
-						);
-						// Retry the original request with the new access token
-						searchApi(error.config).catch((error) => {
-							alert(error.status);
-						});
+						try {
+							const newToken = await refreshToken(token.refresh_token);
+							setToken(newToken);
+							// Retry the original request with the new access token
+							return searchApi(error.config);
+						} catch (error: unknown) {
+							console.log(error);
+							return Promise.reject(error);
+						}
 					}
 				}
 				return Promise.reject(error);

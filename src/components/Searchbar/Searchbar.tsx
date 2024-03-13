@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from "react";
+import {FC, ReactNode, useEffect, useRef, useState} from "react";
 import "./styles.scss";
 import { RxCross2 } from "react-icons/rx";
 
@@ -16,26 +16,27 @@ export const Searchbar: FC<SearchbarProps> = ({
 	clearFunction,
 }) => {
 	const [searchValue, setSearchValue] = useState("");
-	const [lastSearchValue, setLastSearchValue] = useState("");
+	const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+	const searchTimeout = 200;
 
-	/* TODO: @Silvan pls clean up, I am too stupid.
-	 should only add a timer when searchvalue is updated to prevent too many requests while typing.
-	 after timeout of not having changed any value, search should be done.
-	 works like this but tries to search every 200ms regardless of change
-	 */
 	useEffect(() => {
-		const timer = setTimeout(() => {
-			if (searchValue !== "") {
-				if (searchValue !== lastSearchValue) {
-					onSubmit(searchValue);
-					setLastSearchValue(searchValue);
-				}
+		clearTimeout(timeoutRef.current);
+		timeoutRef.current = setTimeout(() => {
+			// If input is empty (even if it is multiple spaces)
+			if (!searchValue.match(/^\s*$/)) {
+				console.log("nigger")
+				onSubmit(searchValue);
 			} else {
 				clearFunction();
 			}
-		}, 200);
-		return () => clearTimeout(timer);
+		}, searchTimeout);
 	}, [searchValue, onSubmit, clearFunction]);
+
+	useEffect(() => {
+		return () => {
+			clearTimeout(timeoutRef.current);
+		}
+	}, []);
 
 	return (
 		<>
