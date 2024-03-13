@@ -1,32 +1,52 @@
-import { FC, ReactNode, useEffect, useState } from "react";
+import {FC, ReactNode, useEffect, useRef, useState} from "react";
 import "./styles.scss";
 import { RxCross2 } from "react-icons/rx";
 
 interface SearchbarProps {
 	onSubmit: (search: string) => void;
-    placeholder: string;
-    icon?: ReactNode;
-    onIconClick?: () => void;
+	clearFunction: () => void;
+	placeholder: string;
+	icon?: ReactNode;
 }
 
-export const Searchbar: FC<SearchbarProps> = ({ onSubmit, placeholder, icon }) => {
+export const Searchbar: FC<SearchbarProps> = ({
+	onSubmit,
+	placeholder,
+	icon,
+	clearFunction,
+}) => {
 	const [searchValue, setSearchValue] = useState("");
+	const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+	const searchTimeout = 250;
 
-    useEffect(() => {
-		if (searchValue !== "") {
-			onSubmit(searchValue);
+	useEffect(() => {
+		clearTimeout(timeoutRef.current);
+		timeoutRef.current = setTimeout(() => {
+			// If input is empty (even if it is multiple spaces)
+			if (!searchValue.match(/^\s*$/)) {
+				console.log("nigger")
+				onSubmit(searchValue);
+			} else {
+				clearFunction();
+			}
+		}, searchTimeout);
+	}, [searchValue, onSubmit, clearFunction]);
+
+	useEffect(() => {
+		return () => {
+			clearTimeout(timeoutRef.current);
 		}
-    }, [searchValue])
+	}, []);
 
 	return (
 		<>
 			<div className="searchbar">
-                {icon}
+				{icon}
 				<input
 					placeholder={placeholder}
 					value={searchValue}
-					onChange={(e) => {
-						setSearchValue(e.target.value);
+					onInput={(e) => {
+						setSearchValue(e.currentTarget.value);
 					}}
 				/>
 				{searchValue.length > 0 && (
