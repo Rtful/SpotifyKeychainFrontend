@@ -30,7 +30,7 @@ export const Searchbar: FC<SearchbarProps> = ({
 				clearFunction();
 			}
 		}, searchTimeout);
-	}, [searchValue, onSubmit, clearFunction]);
+	}, [searchValue]);
 
 	useEffect(() => {
 		return () => {
