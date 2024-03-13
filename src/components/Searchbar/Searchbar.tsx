@@ -49,7 +49,7 @@ export const Searchbar: FC<SearchbarProps> = ({
 					}}
 				/>
 				{searchValue.length > 0 && (
-					<RxCross2 onClick={() => setSearchValue("")} />
+					<RxCross2 onClick={() => setSearchValue("")} className="close-icon"/>
 				)}
 			</div>
 		</>

@@ -5,20 +5,36 @@
 	align-items: center;
 	border: 2px solid $searchbar-color;
 	background-color: $searchbar-color;
-	width: 364px;
-	height: 36px;
+	width: 100%;
+	box-sizing: border-box;
+	max-width: 400px;
+	height: 52px;
 	padding: 6px 16px 6px 16px;
 	flex-direction: row;
 	border-radius: 9999999px;
-	text-align: justify;
+
+	.close-icon {
+		margin-left: auto;
+		font-size: 30px;
+		color: $passive-text-color;
+	}
+
+	.close-icon:hover {
+		color: $text-color;
+	}
+
+	svg {
+		min-width: 25px;
+	}
 }
 
 .searchbar {
 	input {
 		background-color: transparent;
 		border: none;
-		width: 300px;
+		width: max-content;
 		height: 100%;
+		width: 100%;
 		padding: 0;
 		padding-left: 1rem;
 		font-size: medium;
@@ -30,26 +46,22 @@
 }
 
 .searchbar {
-	svg {
-		width: 25px;
-		height: 25px;
-		color: $passive-text-color;
-	}
+	font-size: 25px;
+	color: $passive-text-color;
 }
 
 .searchbar:focus-within {
 	border: 2px solid $text-color;
 
-	svg {
+	.search-icon {
 		color: $text-color;
 	}
 }
 
 .searchbar:hover {
-	svg {
+	.search-icon {
 		color: $text-color;
 	}
 
 	background-color: $searchbar-color-hover;
 }
-

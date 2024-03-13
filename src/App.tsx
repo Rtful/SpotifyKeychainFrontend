@@ -168,7 +168,7 @@ function App() {
 							<Searchbar
 								placeholder="What do you want to search?"
 								onSubmit={search}
-								icon={<IoSearchOutline />}
+								icon={<IoSearchOutline className="search-icon"/>}
 								clearFunction={() => {
 									setSearchResults({
 										artists: [],
